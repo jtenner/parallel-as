@@ -1,0 +1,30 @@
+{
+  "name": "fp-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "run-s rimraf asbuild tsc run",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rimraf": "run-p rimraf:lib rimraf:build",
+    "rimraf:lib": "rimraf lib",
+    "rimraf:build": "rimraf build",
+    "tsc": "tsc",
+    "run": "node --experimental-wasm-threads lib/index",
+    "asbuild:master": "asc assembly/index.ts -b build/master.wasm -t build/master.wat --enable threads,simd --sharedMemory 10000 --importMemory --validate --sourceMap -O3 --debug",
+    "asbuild:worker": "asc assembly/index.ts -b build/worker.wasm -t build/worker.wat --enable threads,simd --sharedMemory 10000 --importMemory --validate --sourceMap -O3 --use RTrace=1 --runPasses remove-memory",
+    "asbuild": "run-p asbuild:master asbuild:worker"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^13.13.4",
+    "assemblyscript": "0.9.4-nightly.20200430",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.9.0-beta"
+  },
+  "dependencies": {
+    "@assemblyscript/loader": "^0.9.4-nightly.20200430"
+  }
+}
